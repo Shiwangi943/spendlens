@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SpendLens — AI Spend Audit</title>
+<meta name="description" content="Find out if your startup is overpaying for AI tools. Free, instant audit. No login required."/>
+<meta property="og:title" content="SpendLens — AI Spend Audit by Credex"/>
+<meta property="og:description" content="Stop overpaying for AI tools. Get a free, instant spend audit in 60 seconds."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f3ee;--surface:#fff;--surface2:#f0ede6;--surface3:#e8e4dc;
+  --ink:#1a1916;--ink2:#5a5852;--ink3:#9a9890;
+  --green:#1a472a;--green-l:#e8f2ec;--green-m:#c8e0d0;
+  --orange:#c8522a;--orange-l:#fdf0eb;
+  --border:#e2dfd8;--border2:#ccc9c0;
+  --r:12px;--r-sm:8px;--r-lg:16px;
+  --shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.6}
+a{color:var(--green);text-decoration:none}
+a:hover{text-decoration:underline}
+img{display:block;max-width:100%}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:.875rem 2rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;gap:1rem}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--green);letter-spacing:-.03em;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.logo-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:12px}
+.pill{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
+.pill-green{background:var(--green-l);color:var(--green)}
+.pill-orange{background:var(--orange-l);color:var(--orange)}
+
+/* ── HERO ── */
+.hero{max-width:860px;margin:0 auto;padding:5rem 2rem 3.5rem;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--green-l);color:var(--green);font-size:12.5px;font-weight:500;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;letter-spacing:.01em}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5.5vw,3.6rem);font-weight:800;line-height:1.08;letter-spacing:-.035em;margin-bottom:1.25rem}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero-sub{font-size:1.05rem;color:var(--ink2);max-width:520px;margin:0 auto 2.5rem;font-weight:300}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;margin-bottom:3rem;flex-wrap:wrap}
+.hstat strong{display:block;font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:700;line-height:1}
+.hstat span{font-size:12px;color:var(--ink3);margin-top:2px;display:block}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;font-weight:500;font-size:1rem;padding:14px 32px;border-radius:40px;cursor:pointer;border:none;transition:all .2s;font-family:'DM Sans',sans-serif;box-shadow:0 4px 24px rgba(26,71,42,.25)}
+.btn-hero:hover{background:#163d24;transform:translateY(-2px);box-shadow:0 6px 28px rgba(26,71,42,.3)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:920px;margin:0 auto;padding:2rem}
+.step-tag{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:.6rem}
+
+/* ── CARD ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem;box-shadow:var(--shadow)}
+.card+.card{margin-top:1.5rem}
+.card-head{margin-bottom:1.5rem}
+.card-head h2{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:.3rem}
+.card-head p{font-size:13.5px;color:var(--ink2)}
+
+/* ── FORM ── */
+label.fl{display:block;font-size:13px;font-weight:500;margin-bottom:5px;color:var(--ink)}
+select,input[type=number],input[type=text],input[type=email]{
+  width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:var(--r-sm);
+  font-family:'DM Sans',sans-serif;font-size:13.5px;background:var(--surface);color:var(--ink);outline:none;transition:border .15s,box-shadow .15s;
+}
+select:hover,input:hover{border-color:var(--border2)}
+select:focus,input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,71,42,.08)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.875rem}
+
+/* ── TOOL ROWS ── */
+.tool-grid{display:flex;flex-direction:column;gap:10px}
+.tool-row{display:grid;grid-template-columns:154px 1fr 100px 86px;gap:10px;align-items:center;padding:13px 15px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);transition:opacity .2s,background .2s}
+.tool-row.inactive{opacity:.42}
+.tool-row.active{background:#fff;border-color:var(--green-m)}
+.tool-name{font-size:13px;font-weight:500;display:flex;align-items:center;gap:9px}
+.tool-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:1px solid rgba(0,0,0,.06)}
+.tool-fields{display:flex;gap:7px}
+.tool-fields select,.tool-fields input{font-size:13px;padding:8px 10px}
+.seats-f{width:72px!important}
+.spend-f{width:95px!important}
+
+/* ── TOGGLE ── */
+.toggle-wrap{display:flex;align-items:center;gap:7px;cursor:pointer}
+.tgl{width:38px;height:21px;background:var(--border2);border-radius:11px;position:relative;transition:background .2s;cursor:pointer;flex-shrink:0}
+.tgl.on{background:var(--green)}
+.tgl::after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl.on::after{transform:translateX(17px)}
+.tgl-label{font-size:11.5px;color:var(--ink3);font-weight:500;width:20px}
+
+/* ── SUBMIT ── */
+.btn-submit{display:block;width:100%;padding:15px;background:var(--green);color:#fff;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;border:none;border-radius:40px;cursor:pointer;transition:all .2s;margin-top:2rem;letter-spacing:.01em;box-shadow:0 4px 20px rgba(26,71,42,.2)}
+.btn-submit:hover{background:#163d24;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+/* ── RESULTS HERO ── */
+.r-hero{background:var(--green);color:#fff;border-radius:var(--r-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.r-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:rgba(255,255,255,.05);border-radius:50%}
+.r-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:.5rem}
+.r-big{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,6vw,4rem);font-weight:800;line-height:1;margin-bottom:.25rem}
+.r-big sup{font-size:1.5rem;vertical-align:super}
+.r-annual{font-size:.95rem;opacity:.8;margin-bottom:1.75rem}
+.r-sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:500px;margin:0 auto}
+.r-sc{background:rgba(255,255,255,.12);border-radius:10px;padding:1.1rem;text-align:left}
+.r-sc-l{font-size:11.5px;opacity:.65;margin-bottom:3px}
+.r-sc-v{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:700}
+
+/* ── AI SUMMARY ── */
+.ai-box{background:linear-gradient(135deg,var(--green-l),#dff0e6);border:1px solid var(--green-m);border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem}
+.ai-lbl{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:.75rem}
+.ai-text{font-size:14px;line-height:1.75;color:var(--ink)}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid var(--green);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── AUDIT LIST ── */
+.alist{display:flex;flex-direction:column;gap:11px}
+.aitem{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1.25rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+.aitem.saving{border-left:3px solid var(--green)}
+.aitem.warning{border-left:3px solid var(--orange)}
+.aitem.optimal{border-left:3px solid #ccc}
+.a-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14.5px;margin-bottom:4px}
+.a-cur{font-size:12.5px;color:var(--ink3);margin-bottom:6px}
+.a-action{font-size:13.5px;font-weight:500;margin-bottom:3px}
+.a-reason{font-size:13px;color:var(--ink2);line-height:1.55}
+.badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11.5px;font-weight:500;white-space:nowrap;margin-bottom:6px}
+.badge-save{background:var(--green-l);color:var(--green)}
+.badge-warn{background:var(--orange-l);color:var(--orange)}
+.badge-ok{background:#f0efeb;color:#888}
+.a-saving{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--green);white-space:nowrap}
+
+/* ── CREDEX CTA ── */
+.credex-box{background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:2rem;text-align:center;margin-bottom:1.5rem}
+.credex-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.5rem}
+.credex-box p{font-size:13.5px;opacity:.72;max-width:480px;margin:0 auto 1.25rem;line-height:1.6}
+.btn-orange{display:inline-flex;align-items:center;gap:7px;background:var(--orange);color:#fff;padding:12px 26px;border-radius:30px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;font-size:14px;transition:all .2s}
+.btn-orange:hover{background:#b34823;transform:translateY(-1px)}
+.btn-ghost{display:inline-flex;align-items:center;padding:12px 22px;border-radius:30px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.25);font-family:'DM Sans',sans-serif;font-size:13.5px;color:rgba(255,255,255,.65);background:transparent;transition:all .2s;margin-left:8px}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:#fff}
+
+/* ── EMAIL GATE ── */
+.egate{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-bottom:1.5rem}
+.egate h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.3rem}
+.egate p{font-size:13px;color:var(--ink2);margin-bottom:1.25rem}
+.egate-form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.egate-form input{font-size:13.5px}
+.btn-egate{padding:10px 20px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .2s}
+.btn-egate:hover{background:#163d24}
+/* honeypot */
+.hp-field{position:absolute;left:-9999px;opacity:0;pointer-events:none;tabindex:-1}
+.e-success{display:none;text-align:center;padding:1rem;background:var(--green-l);border-radius:var(--r-sm);color:var(--green);font-size:14px;font-weight:500}
+
+/* ── SHARE ── */
+.share-row{display:flex;gap:8px;margin-top:.875rem}
+.share-url{flex:1;padding:9px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:12.5px;color:var(--ink2);font-family:'DM Mono',monospace,sans-serif}
+.btn-copy{padding:9px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;color:var(--ink)}
+.btn-copy:hover{background:var(--surface2)}
+.share-hint{font-size:11.5px;color:var(--ink3);margin-top:5px}
+
+/* ── BACK BTN ── */
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--ink2);padding:8px 16px;border-radius:20px;font-size:13.5px;cursor:pointer;margin-bottom:1.5rem;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-back:hover{background:var(--surface);color:var(--ink)}
+
+/* ── OPTIMAL NOTE ── */
+.opt-note{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;text-align:center}
+.opt-note h3{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.3rem}
+.opt-note p{font-size:13.5px;color:var(--ink2)}
+
+/* ── ERROR TOAST ── */
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1916;color:#fff;padding:10px 22px;border-radius:30px;font-size:13.5px;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+
+/* ── LOADING OVERLAY ── */
+#loading{display:none;position:fixed;inset:0;background:rgba(245,243,238,.88);z-index:500;place-items:center;flex-direction:column;gap:1rem}
+#loading.show{display:flex}
+.loader-ring{width:48px;height:48px;border:4px solid var(--green-m);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}
+#loading p{font-family:'Syne',sans-serif;font-weight:600;color:var(--green);font-size:1rem}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:3rem 2rem 4rem;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--border);margin-top:3rem}
+
+/* ── STATUS BADGE (API) ── */
+.api-status{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink3)}
+.dot-live{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  nav{padding:.75rem 1rem}
+  .hero{padding:3rem 1rem 2rem}
+  .wrap{padding:1rem}
+  .tool-row{grid-template-columns:1fr;gap:8px}
+  .g2,.g3{grid-template-columns:1fr}
+  .r-sgrid{grid-template-columns:1fr}
+  .egate-form{grid-template-columns:1fr}
+  .aitem{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading" aria-live="polite" aria-label="Processing audit">
+  <div class="loader-ring"></div>
+  <p id="loading-msg">Running your audit…</p>
+</div>
+
+<!-- TOAST -->
+<div id="toast" role="alert"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><div class="logo-dot"></div>SpendLens</div>
+  <div class="nav-right">
+    <div class="api-status"><div class="dot-live"></div><span id="api-status-text">Connecting…</span></div>
+    <span class="pill pill-green">Free Audit</span>
+    <span style="font-size:13px;color:var(--ink2)">by <a href="https://credex.rocks" target="_blank" rel="noopener">Credex</a></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero-section">
+  <div class="eyebrow">✦ No login · No credit card · Results in 60 seconds</div>
+  <h1>Is your team <em>overpaying</em><br/>for AI tools?</h1>
+  <p class="hero-sub">Enter what you're currently paying. Get an honest, instant audit — where to downgrade, what to switch, and exactly how much you'd save.</p>
+  <div class="hero-stats">
+    <div class="hstat"><strong>$2,400</strong><span>avg annual savings found</span></div>
+    <div class="hstat"><strong>8 tools</strong><span>audited in one pass</span></div>
+    <div class="hstat"><strong>100%</strong><span>free, always</span></div>
+  </div>
+  <button class="btn-hero" onclick="scrollToForm()">Start my free audit →</button>
+</section>
+
+<!-- ── FORM ── -->
+<main class="wrap" id="main-wrap">
+  <div id="form-section">
+
+    <!-- CONTEXT -->
+    <div class="card" id="step1-card">
+      <div class="step-tag">Step 1 — Your context</div>
+      <div class="card-head">
+        <h2>Tell us about your team</h2>
+        <p>This shapes the recommendations — not just the math.</p>
+      </div>
+      <div class="g2">
+        <div>
+          <label class="fl" for="team-size">Team size</label>
+          <select id="team-size">
+            <option value="1">Solo (just me)</option>
+            <option value="2-5" selected>2–5 people</option>
+            <option value="6-15">6–15 people</option>
+            <option value="16-50">16–50 people</option>
+            <option value="51+">51+ people</option>
+          </select>
+        </div>
+        <div>
+          <label class="fl" for="use-case">Primary AI use case</label>
+          <select id="use-case">
+            <option value="coding">Coding / engineering</option>
+            <option value="writing">Writing / content</option>
+            <option value="data">Data analysis</option>
+            <option value="research">Research</option>
+            <option value="mixed" selected>Mixed / general</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="card" style="margin-top:1.5rem">
+      <div class="step-tag">Step 2 — Your AI stack</div>
+      <div class="card-head">
+        <h2>What are you currently paying for?</h2>
+        <p>Toggle on the tools you use. Enter your plan, seat count, and monthly cost.</p>
+      </div>
+      <div class="tool-grid" id="tool-grid"></div>
+    </div>
+
+    <button class="btn-submit" id="audit-btn" onclick="submitAudit()">Run my AI spend audit →</button>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div id="results-section" style="display:none">
+    <button class="btn-back" onclick="showForm()">← Edit inputs</button>
+
+    <!-- SAVINGS HERO -->
+    <div class="r-hero" id="r-hero">
+      <div class="r-label">Potential monthly savings</div>
+      <div class="r-big" id="r-monthly"><sup>$</sup><span id="r-monthly-val">0</span></div>
+      <div class="r-annual" id="r-annual">$0 per year</div>
+      <div class="r-sgrid">
+        <div class="r-sc"><div class="r-sc-l">Current monthly spend</div><div class="r-sc-v" id="r-current">$0</div></div>
+        <div class="r-sc"><div class="r-sc-l">Optimised spend</div><div class="r-sc-v" id="r-optimised">$0</div></div>
+      </div>
+    </div>
+
+    <!-- AI SUMMARY -->
+    <div class="ai-box">
+      <div class="ai-lbl"><span class="spinner" id="ai-spinner"></span><span id="ai-lbl-text">Generating personalised summary…</span></div>
+      <div class="ai-text" id="ai-summary">Analysing your stack…</div>
+    </div>
+
+    <!-- PER-TOOL -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-head"><h2>Tool-by-tool breakdown</h2><p>Every recommendation is based on your plan, seat count, and use case.</p></div>
+      <div class="alist" id="audit-list"></div>
+    </div>
+
+    <!-- CREDEX CTA (shown for savings > $500) -->
+    <div class="credex-box" id="credex-cta" style="display:none">
+      <h3>You could save significantly more.</h3>
+      <p>Credex sources discounted AI credits — Claude, ChatGPT Enterprise, Cursor — from companies that overforecast or pivoted. Same tools. Real discounts.</p>
+      <button class="btn-orange" onclick="window.open('https://credex.rocks','_blank')">Book a Credex consultation →</button>
+      <button class="btn-ghost" onclick="this.parentElement.style.display='none'">Maybe later</button>
+    </div>
+
+    <!-- EMAIL GATE -->
+    <div class="egate" id="email-gate">
+      <h3>Get your full audit report by email</h3>
+      <p>We'll send a copy. For high-savings cases, a Credex advisor may follow up with a tailored offer.</p>
+      <div class="egate-form">
+        <div>
+          <label class="fl" for="e-email">Work email</label>
+          <input type="email" id="e-email" placeholder="you@company.com" autocomplete="email"/>
+        </div>
+        <div>
+          <label class="fl" for="e-company">Company (optional)</label>
+          <input type="text" id="e-company" placeholder="Acme Inc."/>
+        </div>
+        <button class="btn-egate" onclick="captureEmail()">Send report</button>
+      </div>
+      <!-- Honeypot -->
+      <input class="hp-field" type="text" id="e-hp" name="_hp" tabindex="-1" autocomplete="off"/>
+      <div class="e-success" id="e-success">✓ Report saved! Check your inbox. We'll be in touch.</div>
+
+      <div style="margin-top:1.1rem">
+        <div style="font-size:13px;color:var(--ink2);margin-bottom:.5rem;font-weight:500">Share this audit</div>
+        <div class="share-row">
+          <input class="share-url" id="share-url" readonly value=""/>
+          <button class="btn-copy" id="copy-btn" onclick="copyLink()">Copy link</button>
+        </div>
+        <div class="share-hint">Your email and company are never included in the public link.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <strong>SpendLens</strong> — free AI spend audit by <a href="https://credex.rocks" target="_blank" rel="noopener">Credex</a> ·
+  Pricing data verified from official vendor pages ·
+  Built for the Credex Web Dev Intern Assignment 2026
+</footer>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────
+// Change this to your deployed backend URL when live
+const API = 'http://localhost:3001';
+
+// ─── TOOLS DEFINITION ─────────────────────────────────────────
+const TOOLS = [
+  { id:'cursor',        name:'Cursor',          icon:'🖱️', bg:'#e8f0fe',
+    plans:[{v:'hobby',l:'Hobby (Free)'},{v:'pro',l:'Pro — $20/seat'},{v:'business',l:'Business — $40/seat'},{v:'enterprise',l:'Enterprise'}], def:'pro', payg:false },
+  { id:'copilot',       name:'GitHub Copilot',  icon:'⚡', bg:'#f0f4ff',
+    plans:[{v:'individual',l:'Individual — $10/seat'},{v:'business',l:'Business — $19/seat'},{v:'enterprise',l:'Enterprise — $39/seat'}], def:'business', payg:false },
+  { id:'claude',        name:'Claude',          icon:'🤖', bg:'#f5f0ff',
+    plans:[{v:'free',l:'Free'},{v:'pro',l:'Pro — $20/seat'},{v:'max',l:'Max — $100/seat'},{v:'team',l:'Team — $30/seat'},{v:'enterprise',l:'Enterprise'},{v:'api',l:'API Direct'}], def:'pro', payg:false },
+  { id:'chatgpt',       name:'ChatGPT',         icon:'💬', bg:'#f0faf5',
+    plans:[{v:'plus',l:'Plus — $20/seat'},{v:'team',l:'Team — $30/seat'},{v:'enterprise',l:'Enterprise'},{v:'api',l:'API Direct'}], def:'plus', payg:false },
+  { id:'openai-api',    name:'OpenAI API',      icon:'🔌', bg:'#f5fff8',
+    plans:[{v:'payg',l:'Pay-as-you-go'}], def:'payg', payg:true },
+  { id:'anthropic-api', name:'Anthropic API',   icon:'🔮', bg:'#faf5ff',
+    plans:[{v:'payg',l:'Pay-as-you-go'}], def:'payg', payg:true },
+  { id:'gemini',        name:'Gemini',          icon:'✨', bg:'#fff8e1',
+    plans:[{v:'pro',l:'Pro — $20/seat'},{v:'ultra',l:'Ultra — $249/mo'},{v:'api',l:'API'}], def:'pro', payg:false },
+  { id:'windsurf',      name:'Windsurf',        icon:'🏄', bg:'#e8f8ff',
+    plans:[{v:'free',l:'Free'},{v:'pro',l:'Pro — $15/seat'},{v:'teams',l:'Teams — $35/seat'}], def:'pro', payg:false },
+];
+
+// ─── STATE ────────────────────────────────────────────────────
+let state = {};        // tool states
+let currentAuditId = null;
+let currentSavings  = 0;
+
+function defaultState() {
+  const s = {};
+  TOOLS.forEach(t => {
+    s[t.id] = { active: ['cursor','claude','chatgpt'].includes(t.id), plan: t.def, seats: 2, spend: '' };
+  });
+  return s;
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('spendlens_v2', JSON.stringify({
+      state,
+      teamSize: document.getElementById('team-size').value,
+      useCase:  document.getElementById('use-case').value,
+    }));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('spendlens_v2') || '{}');
+    if (saved.state) state = saved.state;
+    if (saved.teamSize) document.getElementById('team-size').value = saved.teamSize;
+    if (saved.useCase)  document.getElementById('use-case').value  = saved.useCase;
+  } catch(e) {}
+}
+
+// ─── RENDER TOOLS ─────────────────────────────────────────────
+function renderTools() {
+  const grid = document.getElementById('tool-grid');
+  grid.innerHTML = '';
+  TOOLS.forEach(tool => {
+    if (!state[tool.id]) state[tool.id] = { active: false, plan: tool.def, seats: 1, spend: '' };
+    const s = state[tool.id];
+
+    const row = document.createElement('div');
+    row.className = `tool-row ${s.active ? 'active' : 'inactive'}`;
+    row.id = 'tr-' + tool.id;
+
+    const opts = tool.plans.map(p => `<option value="${p.v}" ${p.v===s.plan?'selected':''}>${p.l}</option>`).join('');
+    const isPayg = tool.plans.find(p => p.v === s.plan)?.v === 'payg' || tool.payg;
+
+    row.innerHTML = `
+      <div class="tool-name">
+        <div class="tool-ico" style="background:${tool.bg}">${tool.icon}</div>
+        ${tool.name}
+      </div>
+      <div class="tool-fields">
+        <select style="flex:1;min-width:145px" onchange="updateTool('${tool.id}','plan',this.value)">${opts}</select>
+        <input type="number" class="seats-f" min="1" max="5000" value="${s.seats}" placeholder="Seats" title="Number of seats" onchange="updateTool('${tool.id}','seats',this.value)"/>
+      </div>
+      <input type="number" class="spend-f" min="0" value="${s.spend}" placeholder="${isPayg?'$/month':'Auto'}" title="${isPayg?'Monthly spend in USD':'Auto-calculated from plan × seats'}" onchange="updateTool('${tool.id}','spend',this.value)"/>
+      <div class="toggle-wrap" onclick="toggleTool('${tool.id}')">
+        <div class="tgl ${s.active?'on':''}" id="tgl-${tool.id}"></div>
+        <span class="tgl-label" id="tgl-lbl-${tool.id}">${s.active?'On':'Off'}</span>
+      </div>
+    `;
+    grid.appendChild(row);
+  });
+}
+
+function toggleTool(id) {
+  state[id].active = !state[id].active;
+  saveState();
+  renderTools();
+}
+
+function updateTool(id, field, val) {
+  if (field === 'plan')  state[id].plan  = val;
+  if (field === 'seats') state[id].seats = Math.max(1, parseInt(val) || 1);
+  if (field === 'spend') state[id].spend = parseFloat(val) || '';
+  saveState();
+  // Re-render just to update active plan's placeholder
+  const tool = TOOLS.find(t => t.id === id);
+  const isPayg = tool.plans.find(p => p.v === state[id].plan)?.v === 'payg' || tool.payg;
+  const spendEl = document.querySelector(`#tr-${id} .spend-f`);
+  if (spendEl) spendEl.placeholder = isPayg ? '$/month' : 'Auto';
+}
+
+// ─── AUDIT SUBMIT ─────────────────────────────────────────────
+async function submitAudit() {
+  const active = TOOLS.filter(t => state[t.id]?.active);
+  if (!active.length) { showToast('Toggle on at least one tool you\'re paying for.'); return; }
+
+  const tools = active.map(t => ({
+    id:          t.id,
+    plan:        state[t.id].plan,
+    seats:       state[t.id].seats || 1,
+    manualSpend: parseFloat(state[t.id].spend) || 0,
+  }));
+
+  setLoading(true, 'Running your audit…');
+  document.getElementById('audit-btn').disabled = true;
+
+  try {
+    const res = await fetch(`${API}/api/audit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tools,
+        teamSize: document.getElementById('team-size').value,
+        useCase:  document.getElementById('use-case').value,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+
+    const data = await res.json();
+    setLoading(false);
+    renderResults(data);
+
+  } catch (err) {
+    setLoading(false);
+    document.getElementById('audit-btn').disabled = false;
+    showToast('Could not reach the backend. Make sure the server is running at ' + API);
+    console.error(err);
+  }
+}
+
+// ─── RENDER RESULTS ───────────────────────────────────────────
+function renderResults(data) {
+  const { auditId, results, summary, aiSummary, shareUrl } = data;
+  currentAuditId = auditId;
+  currentSavings = summary.totalSavings;
+
+  // Hero numbers
+  document.getElementById('r-monthly-val').textContent = summary.totalSavings.toLocaleString();
+  document.getElementById('r-annual').textContent      = `$${summary.annualSavings.toLocaleString()} per year`;
+  document.getElementById('r-current').textContent     = `$${summary.totalCurrent.toLocaleString()}`;
+  document.getElementById('r-optimised').textContent   = `$${summary.optimisedSpend.toLocaleString()}`;
+
+  // AI summary
+  document.getElementById('ai-spinner').style.display  = 'none';
+  document.getElementById('ai-lbl-text').textContent   = '✦ AI-generated personalised summary';
+  document.getElementById('ai-summary').textContent    = aiSummary;
+
+  // Per-tool breakdown
+  const list = document.getElementById('audit-list');
+  list.innerHTML = '';
+  results.forEach(r => {
+    const el = document.createElement('div');
+    el.className = `aitem ${r.type}`;
+    const badge = r.type === 'saving' ? 'badge-save' : r.type === 'warning' ? 'badge-warn' : 'badge-ok';
+    const badgeTxt = r.type === 'saving' ? 'Savings found' : r.type === 'warning' ? 'Review' : 'Optimised ✓';
+    el.innerHTML = `
+      <div>
+        <div class="a-name">${TOOLS.find(t=>t.id===r.toolId)?.name || r.toolId}</div>
+        <div class="a-cur">${r.plan} · ${r.seats} seat${r.seats!==1?'s':''} · $${r.monthlySpend.toLocaleString()}/mo</div>
+        <div class="a-action">${r.action}</div>
+        <div class="a-reason">${r.reason}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px">
+        <span class="badge ${badge}">${badgeTxt}</span>
+        ${r.savings > 0 ? `<span class="a-saving">−$${r.savings.toLocaleString()}/mo</span>` : ''}
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  // All optimal case
+  if (results.every(r => r.type === 'optimal')) {
+    list.innerHTML += `<div class="opt-note"><h3>You're spending well 👍</h3><p>Your current AI stack looks appropriately priced for your team. Sign up below to be notified when new optimisations apply.</p></div>`;
+  }
+
+  // Credex CTA
+  document.getElementById('credex-cta').style.display = summary.totalSavings > 500 ? 'block' : 'none';
+
+  // Share URL
+  const url = `${window.location.origin}${window.location.pathname}?audit=${auditId}`;
+  document.getElementById('share-url').value = url;
+
+  showResults();
+}
+
+function showResults() {
+  document.getElementById('form-section').style.display    = 'none';
+  document.getElementById('results-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showForm() {
+  document.getElementById('form-section').style.display    = 'block';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('audit-btn').disabled = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── EMAIL CAPTURE ────────────────────────────────────────────
+async function captureEmail() {
+  const email   = document.getElementById('e-email').value.trim();
+  const company = document.getElementById('e-company').value.trim();
+  const hp      = document.getElementById('e-hp').value;
+
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email address.'); return; }
+
+  try {
+    const res = await fetch(`${API}/api/lead`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, company, auditId: currentAuditId, totalSavings: currentSavings, _hp: hp }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    document.querySelector('.egate-form').style.display = 'none';
+    document.getElementById('e-success').style.display  = 'block';
+  } catch(err) {
+    showToast(err.message || 'Could not save your details. Please try again.');
+  }
+}
+
+// ─── COPY LINK ────────────────────────────────────────────────
+function copyLink() {
+  const url = document.getElementById('share-url').value;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy link', 2000);
+  });
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function scrollToForm() {
+  document.getElementById('step1-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setLoading(show, msg) {
+  const el = document.getElementById('loading');
+  el.classList.toggle('show', show);
+  if (msg) document.getElementById('loading-msg').textContent = msg;
+}
+
+function showToast(msg, dur=4000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.display = 'none', dur);
+}
+
+// ─── API STATUS CHECK ─────────────────────────────────────────
+async function checkAPI() {
+  try {
+    const r = await fetch(`${API}/api/health`, { signal: AbortSignal.timeout(3000) });
+    const data = await r.json();
+    if (data.status === 'ok') {
+      document.getElementById('api-status-text').textContent = 'API connected';
+    }
+  } catch {
+    document.getElementById('api-status-text').textContent = 'API offline';
+    document.querySelector('.dot-live').style.background = '#f44336';
+  }
+}
+
+// ─── DEEP LINK — load shared audit ───────────────────────────
+async function loadSharedAudit(auditId) {
+  setLoading(true, 'Loading shared audit…');
+  try {
+    const res  = await fetch(`${API}/api/audit/${auditId}`);
+    if (!res.ok) throw new Error('Not found');
+    const data = await res.json();
+    // Build a synthetic response to reuse renderResults
+    renderResults({
+      auditId,
+      results:   data.results,
+      summary:   data.summary,
+      aiSummary: `Shared audit from ${new Date(data.createdAt).toLocaleDateString()}. Team: ${data.teamSize}, Use case: ${data.useCase}.`,
+      shareUrl:  `/audit/${auditId}`,
+    });
+  } catch {
+    showToast('Could not load the shared audit.');
+  }
+  setLoading(false);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  state = defaultState();
+  loadState();
+  renderTools();
+  checkAPI();
+
+  document.getElementById('team-size').addEventListener('change', saveState);
+  document.getElementById('use-case').addEventListener('change',  saveState);
+
+  // Handle shared audit URL
+  const params  = new URLSearchParams(window.location.search);
+  const sharedId = params.get('audit');
+  if (sharedId && sharedId.length === 36) {
+    loadSharedAudit(sharedId);
+  }
+});
+</script>
+</body>
+</html>

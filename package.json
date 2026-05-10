@@ -1,0 +1,12 @@
+{
+  "name": "spendlens",
+  "version": "1.0.0",
+  "description": "SpendLens — AI Spend Audit tool by Credex",
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "start:backend": "cd backend && node server.js",
+    "start:frontend": "npx serve frontend -p 3000 --no-clipboard",
+    "dev:backend": "cd backend && npm run dev",
+    "setup": "npm run install:backend && echo '\n✓ Dependencies installed. See README for next steps.'"
+  }
+}
