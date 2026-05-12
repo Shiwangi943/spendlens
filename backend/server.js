@@ -23,6 +23,15 @@ app.use(cors({
   ],
   credentials: true,
 }));
+const path = require('path');
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Catch-all: serve index.html for any non-API route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+});
 
 // Rate limiting (abuse protection)
 const auditLimiter = rateLimit({
